@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="HIghFlyer" default="install" basedir=".">
+
+	<property name="appName" value="HIghFlyer" />
+	<property name="coName" value="Interworld Transport" />
+	<property name="appHome" value="http://highflyer.sf.net" />
+	<property name="copyleft" value="&lt;p&gt;
+--------------------------------------------------------------------------------
+&lt;br&gt;
+HighFlyer_API_Documentation&lt;br&gt;
+--------------------------------------------------------------------------------
+&lt;br&gt;
+Copyright (c) 2004 Interworld Transport.  All rights reserved.
+&lt;p&gt;
+The copyright owner grants you (Licensee) a license to this documentation
+under the terms of the Design Science License.  A full copy of the license can
+be found bundled with this documentation and published within it.
+&lt;p&gt;
+Use of this documentation beyond the legal definition of &apos;fair use&apos; by the
+Licensee states their willingness to accept the terms of the license.
+&lt;p&gt;
+A prospective Licensee unable to find a copy of the license terms should contact
+the copyright holder for a free copy." />
+
+		<path id="classpath">
+			<pathelement path="./class" />
+		</path>
+
+	<target name="init">
+	  	<!-- Create the time stamp -->
+		<tstamp/>
+	</target>
+		
+	<target name="clean"
+		description="Removes all HighFlyer files down to a basic src package.">
+		<delete file="HighFlyer.jar" /> <!-- made by jar target -->
+		<delete file="lib/HighFlyer_API_Docs.jar" /> <!-- made by jar target -->
+		<delete dir="class" /> <!-- made by compile target -->
+		<delete dir="docs/api" /> <!-- made by javadoc target -->
+
+	</target>
+
+	<target name="compile"
+			description="Compiles all the HighFlyer source files" >
+		<mkdir dir="class" />
+
+		<javac 	classpath="lib/jcommon-0.7.1.jar;lib/jfreechart-0.9.4.jar"
+				debug="off"
+				destdir="class"
+				nowarn="on"
+				srcdir="src"
+				verbose="false">
+			<include name="com/interworldtransport/highflyer/*.java"></include>
+			<exclude name="com/interworldtransport/highflyer/EnvelopeModel.java"></exclude>
+			<exclude name="com/interworldtransport/highflyer/CellModel.java"></exclude>
+			<exclude name="com/interworldtransport/clados/*.java"></exclude>
+			<include name="com/interworldtransport/**/*.java"></include>
+			<include name="com/jrefinery/**/*.java"></include>
+		</javac>
+	</target>
+
+	<target name="javadoc"
+		description="Generates the API documentation for HighFlyer." >
+		<delete dir="./docs/api" />
+		<mkdir dir="./docs/api" />
+		<javadoc 	author="true"
+				bottom="${copyleft}"
+				destdir="./docs/api"
+				doctitle="HIghFlyer Package Documentation"
+				header="&lt;a target=_top href=${appHome}&gt;${coName}&lt;/a&gt;"
+				overview="com/interworldtransport/highflyer/overview.html"
+				packagenames="com.interworldtransport.highflyer.*"
+				sourcepath="src"
+				verbose="false"
+				windowtitle="HighFlyer API Documentation">
+		</javadoc>
+	</target>
+
+	<target name="jar"
+		depends="compile"
+		description="Package the class code and images.  This does not get conf an lib needed to run things.." >
+
+		<mkdir dir="class/images"></mkdir>
+
+		<copy 	description="Copy image resources to make them available in the jar"
+				overwrite="true"
+				todir="class/images" >
+			<fileset dir="images">
+				<include name="*.png"/>
+				<include name="*.gif"/>
+				<include name="*.jpg"/>
+			</fileset>
+		</copy>
+
+		<jar
+			jarfile="./HighFlyer.jar"
+			manifest="./HighFlyer.manifest">
+			<fileset dir="./class">
+				<include name="com/**/*.class"/>
+				<include name="images/*.*"/>
+				<include name="conf/*.*"/>
+				<include name="*.jar"/>
+			</fileset>
+		</jar>
+	</target>
+
+	<target name="jar_API_docs"
+		depends="javadoc"
+		description="Package the source code and support docs for install." >
+		<jar
+			jarfile="./lib/HighFlyer_API_Docs.jar"
+			>
+			<fileset dir=".">
+				<include name="docs/api/**/*.*"/>
+			</fileset>
+		</jar>
+	</target>
+
+	<target name="jar_install"
+			depends="jar, jar_API_docs"
+			description="This one is not ready yet.." >
+		<jar	jarfile="./HighFlyer_unjar_this.jar">
+			<fileset dir=".">
+				<include name="*"/>
+			</fileset>
+		</jar>
+	</target>
+
+	<target name="uninstall" description="This one is not ready yet." >
+	</target>
+</project>
+

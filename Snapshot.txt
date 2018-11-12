@@ -1,0 +1,1 @@
+name, alt, isa, temp, pres, dens, liftgasmass, liftgascuft, ballonetgasmass, liftcellavail, liftcellpct, ballonetcellpct, ballonetcellpress, vmass, grosslift, netlift, length, diameter, speed, dynamic lift, dynamic drag, left yaw, right yaw, pitch, roll
